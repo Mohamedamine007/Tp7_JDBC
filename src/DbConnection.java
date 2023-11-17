@@ -23,11 +23,13 @@ public class DbConnection {
             stmt.executeUpdate(query);
         }
 
-        public void delete(Person P) throws SQLException {
+        public int delete(Person P) throws SQLException {
 
             String query = "DELETE FROM options WHERE nom='"+P.nom+"'";
             Statement stmt = conn.createStatement();
-            stmt.executeUpdate(query);
+            int rowsAffected = stmt.executeUpdate(query);
+
+            return rowsAffected;
         }
 
         public void closeConnection() throws SQLException {

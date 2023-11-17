@@ -56,14 +56,46 @@ public class form extends JFrame{
 
                      try {
                          db.insert(P);
-                         jOptionPane.showMessageDialog(form.this, "Record added successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
+                             jOptionPane.showMessageDialog(form.this, "Record added successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
                      } catch(SQLException sqle) {
+                         jOptionPane.showMessageDialog(form.this, "Record addition FAILED", "Error", JOptionPane.ERROR_MESSAGE);
                          sqle.printStackTrace();
                      }finally {
                          if(db != null) {
                              try {
                                  db.closeConnection();
                              } catch(SQLException sqle) {
+                                 sqle.printStackTrace();
+                             }
+                         }
+                     }
+                 }
+             }
+     );
+
+     supprimer.addActionListener(
+             new ActionListener() {
+                 @Override
+                 public void actionPerformed(ActionEvent e) {
+                     Person P = new Person();
+                     P.nom = nomT.getText();
+
+                     DbConnection db = new DbConnection();
+
+                     try {
+                         int rowsAffected = db.delete(P);
+                         if (rowsAffected > 0) {
+                             jOptionPane.showMessageDialog(form.this, "Record deleted successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
+                         } else {
+                             jOptionPane.showMessageDialog(form.this, "Record deletion FAILED", "Error", JOptionPane.ERROR_MESSAGE);
+                         }
+                     } catch(SQLException sqle) {
+                         sqle.printStackTrace();
+                     }finally {
+                         if(db != null) {
+                             try {
+                                 db.closeConnection();
+                             }catch(SQLException sqle) {
                                  sqle.printStackTrace();
                              }
                          }
