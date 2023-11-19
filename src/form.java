@@ -1,7 +1,9 @@
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class form extends JFrame{
@@ -9,6 +11,8 @@ public class form extends JFrame{
  JPanel p1 = new JPanel();
  JPanel p2 = new JPanel();
  JPanel p3 = new JPanel();
+ JPanel p4 = new JPanel();
+ JPanel mainPanel = new JPanel();
 
  JButton ajouter = new JButton("Ajouter");
  JButton supprimer = new JButton("Supprimer");
@@ -20,11 +24,13 @@ public class form extends JFrame{
 
  JOptionPane jOptionPane = new JOptionPane();
 
+
+
  public form() {
 
      setTitle("form");
      setDefaultCloseOperation(this.EXIT_ON_CLOSE);
-     setSize(500, 400);
+     setSize(700, 240);
      setLocationRelativeTo(null);
 
      p1.setLayout(new GridLayout(2, 1));
@@ -104,7 +110,51 @@ public class form extends JFrame{
              }
      );
 
-     add(p1);
+     String columns[] = {"NOM", "PRENOM", "AGE"};
+     String data[][] = new String[8][3];
+
+     afficher.addActionListener(
+             new ActionListener() {
+                 @Override
+                 public void actionPerformed(ActionEvent e) {
+                     DbConnection db = new DbConnection();
+                     try {
+                         int i = 0;
+                         ResultSet selectedData = db.afficher();
+                         while(selectedData.next()) {
+                             String selectedNom = selectedData.getString("Nom");
+                             String selectedPrenom = selectedData.getString("Prenom");
+                             int selectedAge = selectedData.getInt("Age");
+
+                             data[i][0] = selectedNom;
+                             data[i][1] = selectedPrenom;
+                             data[i][2] = selectedAge + "";
+                             i++;
+                         }
+                         DefaultTableModel tableModel = new DefaultTableModel(data, columns);
+                         JTable table = new JTable(tableModel);
+
+
+                         table.setShowGrid(true);
+                         table.setShowVerticalLines(true);
+                         table.setShowHorizontalLines(true);
+                         p4.removeAll();
+                         p4.add(new JScrollPane(table));
+                         revalidate();
+                         repaint();
+                     }catch(SQLException sqle) {
+                         sqle.printStackTrace();
+                     }
+                 }
+             }
+     );
+
+
+
+     mainPanel.setLayout(new BorderLayout());
+     mainPanel.add(p1, BorderLayout.NORTH);
+     mainPanel.add(p4, BorderLayout.CENTER);
+     add(mainPanel);
      p1.add(p2);
      p1.add(p3);
      setVisible(true);

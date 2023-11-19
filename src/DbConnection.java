@@ -32,6 +32,14 @@ public class DbConnection {
             return rowsAffected;
         }
 
+        public ResultSet afficher() throws SQLException{
+
+            String query = "SELECT * FROM options";
+            Statement stmt = conn.createStatement();
+            ResultSet result = stmt.executeQuery(query);
+            return result;
+        }
+
         public void closeConnection() throws SQLException {
 
             if(conn != null && !conn.isClosed()) {
